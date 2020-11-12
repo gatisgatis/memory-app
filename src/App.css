@@ -1,3 +1,9 @@
 .main-app {
   background-color: lightgray;
 }
+
+input{
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}

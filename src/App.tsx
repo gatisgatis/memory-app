@@ -9,10 +9,14 @@ const MemoryApp = () => {
 
   return (
     <div className="main-app">
-      {' '}
-      {state
-        ? 'Iegaumē šo - gsdgsdgsdjvsdjvlksdgjdfbklsfdbo9853'
-        : 'Ko tu atcerējies?'}{' '}
+      {state ? (
+        <h3>Iegaumē šo - gsdgsdgsdjvsdjvlksdgjdfbklsfdbo9853 </h3>
+      ) : (
+        <div>
+          <h3>Ieraksti ko tu atceries un nekas nenotiks! </h3>
+          <input type="text" placeholder="Raksti te" className='input' />
+        </div>
+      )}
     </div>
   );
 };
