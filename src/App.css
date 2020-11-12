@@ -1,0 +1,26 @@
+.todo-app {
+  padding: 20px;
+  background-color: lightgray;
+}
+
+.todo__error-msg {
+  background-color: rgb(185, 126, 126);
+  width: 500px;
+}
+
+.todo__error-cancel {
+  opacity: 0.5;
+}
+
+.todo__task-output {
+  display: flex;
+  align-items: center;
+  background-color: gray;
+}
+
+.todo__task-text {
+  padding: 5px 15px;
+  color: blue;
+  font-size: 20px;
+  
+}
