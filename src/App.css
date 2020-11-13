@@ -11,20 +11,30 @@
 }
 
 .wraper {
-  width: 100%;
+  width: 95%;
+  align-self: center;
   height: 200px;
   word-spacing: 0;
   letter-spacing: 0;
   line-height: 0;
   cursor: pointer;
   padding: 0;
-  border:none;
+  border: none;
   border: 2px solid black;
   border-radius: 5px;
   overflow: hidden;
+  margin-bottom: 5px;
 }
 
 .img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardBack {
+  background-image: linear-gradient(blue, green);
+  opacity: 0.5;
   width: 100%;
   height: 100%;
 }

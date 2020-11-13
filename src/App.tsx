@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { forEachChild } from 'typescript';
 import './App.css';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,40 +15,30 @@ type CardData = {
   imgSide: boolean; // pēc šī app zinās, vai vajag šo kartīti atvērtu vai aizvērtu zīmēt
 };
 
+let fieldSize: number = 1;
+
 const MemoryApp = () => {
   const [clickedFirstCard, setClickedFirstCard] = useState<boolean | undefined>(
     true
   );
-  const [rowCount, setRowCount] = useState<number>(5);
-  const [columnCount, setColumnCount] = useState<number>(5);
-  
+  const [rowCount, setRowCount] = useState<number>(4);
+  const [columnCount, setColumnCount] = useState<number>(4);
+  const [helper, setHelper] = useState<boolean>(false);
 
-  const fieldSizeChangeInputHandler = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (event.target.id === 'row') {
-      setRowCount(parseInt(event.target.value, 10));
-      console.log('input row value', parseInt(event.target.value, 10));
-      console.log('Nomaina row State uz ', rowCount);
-    } else {
-      setColumnCount(parseInt(event.target.value, 10));
-      console.log('input column value', parseInt(event.target.value, 10));
-      console.log('Nomaina column State uz ', columnCount);
-    }
-    let z = rowCount * columnCount; // Kopējais kartiņu daudzums
-    if (z % 2) z -= 1; // Tam jābūt pāra skaitlim
-    console.log(z);
-    const pairIDsArray: number[] = []; // masīvs, kur būs kartiņu pāru skaitļi/atradēji
-    for (let i = 0; i < z / 2; i += 1) {
+  useEffect(() => {
+    fieldSize = rowCount * columnCount; // Kopējais kartiņu daudzums
+    if (fieldSize % 2) fieldSize -= 1; // Tam jābūt pāra skaitlim
+    const pairIDsArray: number[] = []; // masīvs, kur būs kartiņu dublikātu skaitļi/atradēji
+    for (let i = 0; i < fieldSize / 2; i += 1) {
       pairIDsArray.push(i);
       pairIDsArray.push(i);
     }
 
     let tempPairIDindex;
-    let tempHelperNumber = z;
+    let tempHelperNumber = fieldSize;
     gameCards = [];
     // Aizpilda tukšo kartiņu masīvu random secībā
-    for (let i = 0; i < z; i += 1) {
+    for (let i = 0; i < fieldSize; i += 1) {
       tempPairIDindex = Math.floor(Math.random() * tempHelperNumber);
       gameCards.push({
         id: uuidv4(),
@@ -57,6 +47,17 @@ const MemoryApp = () => {
       });
       tempHelperNumber -= 1;
       pairIDsArray.splice(tempPairIDindex, 1);
+    }
+    setHelper(!helper);
+  }, [rowCount, columnCount]);
+
+  const fieldSizeChangeInputHandler = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.target.id === 'row') {
+      setRowCount(parseInt(event.target.value, 10));
+    } else {
+      setColumnCount(parseInt(event.target.value, 10));
     }
   };
 
@@ -116,20 +117,16 @@ const MemoryApp = () => {
                 onClick={() => clickCardHandler(card, index)}
               >
                 {card.imgSide ? (
-                  <div>
-                    <img
-                      className="img"
-                      src={`https://picsum.photos/id/${
-                        // @ts-ignore
-                        card.pairID + 20
-                      }/100/100`}
-                      alt="card"
-                    />
-                  </div>
+                  <img
+                    className="img"
+                    src={`https://picsum.photos/id/${
+                      // @ts-ignore
+                      card.pairID + 20
+                    }/100/100`}
+                    alt="card"
+                  />
                 ) : (
-                  <div>
-                    <h3>Aizmugure </h3>
-                  </div>
+                  <div className="cardBack" />
                 )}
               </button>
             </div>
