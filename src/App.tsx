@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 // import { forEachChild } from 'typescript';
 import './App.css';
 import { v4 as uuidv4 } from 'uuid';
-// import Card from './components/card/card';
+import { Card } from './components/card/card';
+import { ChoseLevel } from './components/chose-level/chose-level';
+import { HighscoreTable } from './components/highscores/highscores';
+import { Counter } from './components/counter/counter';
 
 let firstClickedIndex = 0;
+let secondClickedIndex = 0;
 let firstClickedPairIdentificator: number | undefined = 0;
+let secondClickedPairIdentificator: number | undefined = 1;
 let gameCards: CardData[] = []; // masīvs ar visām kartiņam, kurš sākumā tukšs
 
 type CardData = {
@@ -24,6 +29,9 @@ const MemoryApp = () => {
   const [rowCount, setRowCount] = useState<number>(4);
   const [columnCount, setColumnCount] = useState<number>(4);
   const [helper, setHelper] = useState<boolean>(false);
+  const [choseLevel, setChoseLevel] = useState<boolean>(false);
+  const [customLevel, setCustomLevel] = useState<boolean>(false);
+  const [showGameField, setShowGameField] = useState<boolean>(false);
 
   useEffect(() => {
     fieldSize = rowCount * columnCount; // Kopējais kartiņu daudzums
@@ -63,72 +71,71 @@ const MemoryApp = () => {
 
   const clickCardHandler = (clickedCard: CardData, index: number) => {
     if (clickedFirstCard) {
+      // Pārbauda, vai iepriekšējā ciklā abas atvērtās kārtis nebija vienādas.
+      // Šis nodrošina to, ka pēdējās atvērtās kārtis stāv vaļā tik ilgi,kamēr tiek nospiests jauns click.
+      if (secondClickedPairIdentificator !== firstClickedPairIdentificator) {
+        gameCards[secondClickedIndex].imgSide = false;
+        gameCards[firstClickedIndex].imgSide = false;
+      }
       gameCards[index].imgSide = true;
       firstClickedPairIdentificator = clickedCard.pairID;
       firstClickedIndex = index;
       setClickedFirstCard(false);
     } else {
       gameCards[index].imgSide = true;
-      setClickedFirstCard(undefined);
-      setTimeout(() => {
-        // @ts-ignore
-        if (clickedCard.pairID !== firstClickedPairIdentificator) {
-          gameCards[index].imgSide = false;
-          gameCards[firstClickedIndex].imgSide = false;
-        }
-        setClickedFirstCard(true);
-      }, 1000);
+      secondClickedPairIdentificator = clickedCard.pairID;
+      secondClickedIndex = index;
+      setClickedFirstCard(true);
     }
   };
 
-  // Izrēķina kartītes platumu un laukuma lielumu kopējo!
+  const ChoseLevelHandler = (event: React.MouseEvent<HTMLElement>) => {
+    // @ts-ignore
+    const buttonID = event.target.id;
+    if (buttonID !== '0') {
+      const count = parseInt(buttonID, 10);
+      setRowCount(count);
+      setColumnCount(count);
+      setCustomLevel(false);
+    } else {
+      setCustomLevel(true);
+    }
+  };
+
+  // Izrēķina gridu laukumam
   const flexBasisValue = `${100 / columnCount}%`;
-  const gameFieldWidth = `${1000}px`;
 
   return (
     <div className="main-app">
-      <div>
-        <span> Rindu skaits: </span>
-        <input
-          type="number"
-          className="input"
-          value={rowCount}
-          id="row"
-          onChange={fieldSizeChangeInputHandler}
-        />
-        <span> Kolonnu skaits: </span>
-        <input
-          type="number"
-          className="input"
-          value={columnCount}
-          id="column"
-          onChange={fieldSizeChangeInputHandler}
+      <div className="sideBar">
+        <Counter />
+        <HighscoreTable />
+      </div>
+      <div className="header">
+        <ChoseLevel
+          ClickOnThis={ChoseLevelHandler}
+          customWindow={customLevel}
+          changeCount={fieldSizeChangeInputHandler}
+          rowCount={rowCount}
+          colCount={columnCount}
+          cancelClick={() => setCustomLevel(false)}
         />
       </div>
-      <br />
-      <div className="row gameField" style={{ width: gameFieldWidth }}>
+      <div className="row gameField">
         {gameCards.map((card, index) => {
           return (
-            <div key={card.id} style={{ flexBasis: flexBasisValue }}>
-              <button
-                type="button"
-                className="wraper"
-                disabled={card.imgSide}
-                onClick={() => clickCardHandler(card, index)}
-              >
-                {card.imgSide ? (
-                  <img
-                    className="img"
-                    src={`https://picsum.photos/id/${
-                      // @ts-ignore
-                      card.pairID + 20
-                    }/100/100`}
-                    alt="card"
-                  />
-                ) : (
-                  <div className="cardBack" />
-                )}
-              </button>
+            <div
+              key={card.id}
+              className="fieldColumn"
+              style={{ flexBasis: flexBasisValue }}
+            >
+              <Card
+                isDisabled={card.imgSide}
+                clickOnCard={() => clickCardHandler(card, index)}
+                showImage={card.imgSide}
+                // @ts-ignore
+                imgID={card.pairID}
+              />
             </div>
           );
         })}

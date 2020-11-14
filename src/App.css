@@ -1,40 +1,33 @@
 .main-app {
   background-color: lightgray;
   padding: 40px;
+  position: relative;
+}
+
+.header {
+  width: 75%;
 }
 
 .gameField {
+  width: 75%;
   padding: 5px;
   border: 2px solid blue;
   background-color: lightgreen;
   border-radius: 10px;
+  margin: 0;
 }
 
-.wraper {
-  width: 95%;
-  align-self: center;
-  height: 200px;
-  word-spacing: 0;
-  letter-spacing: 0;
-  line-height: 0;
-  cursor: pointer;
-  padding: 0;
-  border: none;
-  border: 2px solid black;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 5px;
+
+.fieldColumn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5%;
 }
 
-.img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.cardBack {
-  background-image: linear-gradient(blue, green);
-  opacity: 0.5;
-  width: 100%;
-  height: 100%;
+.sideBar {
+  width: 25%;
+  position: absolute;
+  right: 0;
+  top: 0;
 }

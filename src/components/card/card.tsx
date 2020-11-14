@@ -1,11 +1,38 @@
-import React, { useState } from 'react';
-import styles from './card.module.css';
+import React, { FC } from 'react';
+import styles from './card.module.scss';
 
-// @ts-ignore
-const Card = ({ title }) => {
+type Props = {
+  isDisabled: boolean;
+  clickOnCard: () => void;
+  showImage: boolean;
+  imgID: number;
+};
+
+export const Card: FC<Props> = ({
+  isDisabled,
+  clickOnCard,
+  showImage,
+  imgID,
+}) => {
   return (
-    <button type="button" className={styles.card}>
-      this is card {title}
+    <button
+      type="button"
+      className={styles.wrapper}
+      disabled={isDisabled}
+      onClick={clickOnCard}
+    >
+      {showImage ? (
+        <>
+          <img
+            className={styles.img}
+            src={`https://picsum.photos/id/${imgID * 2 + 2}/250/250`}
+            alt={`Attēls Nr:  ${imgID}`}
+          />
+          <div className={styles.loader}> </div>
+        </>
+      ) : (
+        <div className={styles.backSide} />
+      )}
     </button>
   );
 };

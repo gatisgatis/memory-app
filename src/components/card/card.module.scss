@@ -1,0 +1,61 @@
+.card {
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: yellow;
+    width: 100%;
+    cursor: pointer;
+}
+
+
+.wrapper {
+    width: 100%;
+    padding-top: 98%;
+    position: relative;
+    border: none;
+    border: 2px solid black;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: lightgray;
+  }
+
+  .img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    z-index: 2;
+  }
+  
+  .backSide {
+    background-image: linear-gradient(blue, green);
+    opacity: 0.7;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+  }
+
+  
+.loader {
+  border: 8px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 8px solid #33383b;
+  width: 40px;
+  height: 40px;
+  animation: spin 2s linear infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -20px;
+  margin-left: -20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
