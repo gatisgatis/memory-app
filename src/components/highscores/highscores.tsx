@@ -9,11 +9,15 @@ type Props = {
 export const HighscoreTable: FC<Props> = ({ Data }) => {
   return (
     <div className={styles.wrapper}>
-      <div>HighScores: (work in progress) </div>
-      <div>
-        Vards: {Data[0].name} Grids: {Data[0].grid} Laiks: {Data[0].time} Moves:{' '}
-        {Data[0].moves}
-      </div>
+      <div className={styles.title}>HighScores</div>
+      <div>Place/Name/Grid/Time/Moves</div>
+      {Data.map((score, index) => {
+        return (
+          <div key={score.name + score.time.toString()}>
+            {index+1}. {score.name} {score.grid} {score.time}s {score.moves}
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -159,6 +159,11 @@ const MemoryApp = () => {
         moves: movesCount,
       },
     ];
+    updated.sort((prev, next) => {
+      if (prev.time < next.time) return -1;
+      return 1;
+    });
+
     setHighScores(updated);
   };
   // Izrēķina gridu laukumam
