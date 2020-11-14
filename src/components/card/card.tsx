@@ -25,7 +25,7 @@ export const Card: FC<Props> = ({
         <>
           <img
             className={styles.img}
-            src={`https://picsum.photos/id/${imgID * 2 + 2}/250/250`}
+            src={`https://picsum.photos/id/${imgID * 2 + 15}/250/250`}
             alt={`Attēls Nr:  ${imgID}`}
           />
           <div className={styles.loader}> </div>

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import styles from './before-game-info.module.scss';
+import styles from './intro-header.module.scss';
 
 type Props = {
   rowCount: number;
@@ -8,7 +8,7 @@ type Props = {
   choseLevelClick: () => void;
 };
 
-export const BeforeGameInfo: FC<Props> = ({
+export const IntroHeader: FC<Props> = ({
   colCount,
   rowCount,
   startGameClick,
@@ -38,4 +38,4 @@ export const BeforeGameInfo: FC<Props> = ({
   );
 };
 
-export default BeforeGameInfo;
+export default IntroHeader;

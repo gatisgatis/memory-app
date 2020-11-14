@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { forEachChild } from 'typescript';
 import './App.css';
 import { v4 as uuidv4 } from 'uuid';
 import { Card } from './components/card/card';
@@ -7,13 +6,17 @@ import { ChoseLevel } from './components/chose-level/chose-level';
 import { HighscoreTable } from './components/highscores/highscores';
 import { Counter } from './components/counter/counter';
 import { GameInProgress } from './components/game-in-progress/game-in-progress';
-import { BeforeGameInfo } from './components/before-game-info/before-game-info';
+import { IntroHeader } from './components/intro-header/into-header';
+import { FinishGame } from './components/finish-game/finish-game';
 
 let firstClickedIndex = 0;
 let secondClickedIndex = 0;
 let firstClickedPairIdentificator: number | undefined = 0;
 let secondClickedPairIdentificator: number | undefined = 1;
 let gameCards: CardData[] = []; // masīvs ar visām kartiņam, kurš sākumā tukšs
+let fieldSize: number = 1;
+let movesCount: number = 0;
+let gameTimeFinish: number = 0;
 
 type CardData = {
   id: string; // unikāls identifikators katrai kartītei. tiks izmantots priekš key, kad renderēs. varēja arī šeit nemaz nelikt...
@@ -22,20 +25,27 @@ type CardData = {
   imgSide: boolean; // pēc šī app zinās, vai vajag šo kartīti atvērtu vai aizvērtu zīmēt
 };
 
-let fieldSize: number = 1;
-
 const MemoryApp = () => {
-  const [clickedFirstCard, setClickedFirstCard] = useState<boolean | undefined>(
-    true
+  const [clickedFirstCard, setClickedFirstCard] = useState(true);
+  const [rowCount, setRowCount] = useState(2);
+  const [columnCount, setColumnCount] = useState(2);
+  const [showChooseLevelWindow, setShowChooseLevelWindow] = useState(false);
+  const [showCustomLevelInputs, setShowCustomLevelInputs] = useState(false);
+  const [showGameField, setShowGameField] = useState(false);
+  const [showIntroHeader, setShowIntroHeader] = useState(true);
+  const [showGameInProgressHeader, setShowGameInProgressHeader] = useState(
+    false
   );
-  const [rowCount, setRowCount] = useState<number>(2);
-  const [columnCount, setColumnCount] = useState<number>(2);
-  const [choseLevel, setChoseLevel] = useState<boolean>(false);
-  const [customLevel, setCustomLevel] = useState<boolean>(false);
-  const [showGameField, setShowGameField] = useState<boolean>(false);
-  const [startNewGame, setStartNewGame] = useState<boolean>(true);
-  const [gameInProgress, setGameInProgress] = useState<boolean>(false);
+  const [counter, setCounter] = useState(0);
+  const [showFinishGameWindow, setShowFinishGameWindow] = useState(false);
 
+  // Nodrošina taimera darbību. ne līdz galam skaidrs, kopēts risinājums...
+  useEffect(() => {
+    const timer = setInterval(() => setCounter(counter + 1), 1000);
+    return () => clearInterval(timer);
+  }, [counter]);
+
+  // Nodrošina random spēles kartiņu ģenerāciju atbilstoši prasītajiem izmēriem
   useEffect(() => {
     fieldSize = rowCount * columnCount; // Kopējais kartiņu daudzums
     if (fieldSize % 2) fieldSize -= 1; // Tam jābūt pāra skaitlim
@@ -59,7 +69,6 @@ const MemoryApp = () => {
       tempHelperNumber -= 1;
       pairIDsArray.splice(tempPairIDindex, 1);
     }
-    setClickedFirstCard(true);
   }, [rowCount, columnCount, showGameField]);
 
   const fieldSizeChangeInputHandler = (
@@ -73,6 +82,7 @@ const MemoryApp = () => {
   };
 
   const clickCardHandler = (clickedCard: CardData, index: number) => {
+    movesCount += 1;
     if (clickedFirstCard) {
       // Pārbauda, vai iepriekšējā ciklā abas atvērtās kārtis nebija vienādas.
       // Šis nodrošina to, ka pēdējās atvērtās kārtis stāv vaļā tik ilgi,kamēr tiek nospiests jauns click.
@@ -90,6 +100,11 @@ const MemoryApp = () => {
       secondClickedIndex = index;
       setClickedFirstCard(true);
     }
+    // Game Finish
+    if (!gameCards.some((card) => !card.imgSide)) {
+      gameTimeFinish = counter;
+      setShowFinishGameWindow(true);
+    }
   };
 
   const ChoseLevelHandler = (event: React.MouseEvent<HTMLElement>) => {
@@ -99,13 +114,23 @@ const MemoryApp = () => {
       const count = parseInt(buttonID, 10);
       setRowCount(count);
       setColumnCount(count);
-      setCustomLevel(false);
-      setChoseLevel(false);
+      setShowCustomLevelInputs(false);
+      setShowChooseLevelWindow(false);
       setShowGameField(false);
-      setStartNewGame(true);
+      setShowIntroHeader(true);
     } else {
-      setCustomLevel(true);
+      setShowCustomLevelInputs(true);
     }
+  };
+
+  const startNewGame = () => {
+    setCounter(0);
+    fieldSize = 1;
+    movesCount = 0;
+    setClickedFirstCard(true);
+    setShowGameField(true);
+    setShowGameInProgressHeader(true);
+    setShowIntroHeader(false);
   };
 
   // Izrēķina gridu laukumam
@@ -113,46 +138,62 @@ const MemoryApp = () => {
 
   return (
     <div className="main-app">
+      {showFinishGameWindow && (
+        <FinishGame
+          time={gameTimeFinish}
+          moves={movesCount + 2}
+          clickedReturn={() => {
+            setShowIntroHeader(true);
+            setShowGameField(false);
+            setShowFinishGameWindow(false);
+          }}
+          clickedSave={() => {
+            setShowIntroHeader(true);
+            setShowGameField(false);
+            setShowFinishGameWindow(false);
+          }}
+        />
+      )}
       <div className="sideBar">
-        <Counter />
+        <Counter
+          moveCounter={movesCount}
+          timeCounter={counter}
+          showGameTime={showGameField}
+        />
         <HighscoreTable />
       </div>
       <div className="header">
-        {startNewGame && (
-          <BeforeGameInfo
+        {showIntroHeader && (
+          <IntroHeader
             rowCount={rowCount}
             colCount={columnCount}
             choseLevelClick={() => {
-              setChoseLevel(true);
-              setStartNewGame(false);
+              setShowChooseLevelWindow(true);
+              setShowIntroHeader(false);
             }}
-            startGameClick={() => {
-              setShowGameField(true);
-              setGameInProgress(true);
-              setStartNewGame(false);
-            }}
+            startGameClick={startNewGame}
           />
         )}
-        {choseLevel && (
+        {showChooseLevelWindow && (
           <ChoseLevel
             ClickOnThis={ChoseLevelHandler}
-            customWindow={customLevel}
+            customWindow={showCustomLevelInputs}
             changeCount={fieldSizeChangeInputHandler}
             rowCount={rowCount}
             colCount={columnCount}
             okCustomClick={() => {
-              setCustomLevel(false);
-              setChoseLevel(false);
+              setShowCustomLevelInputs(false);
+              setShowChooseLevelWindow(false);
               setShowGameField(false);
-              setStartNewGame(true);
+              setShowIntroHeader(true);
             }}
           />
         )}
-        {gameInProgress && (
+        {showGameInProgressHeader && (
           <GameInProgress
             clickedSetUpGame={() => {
-              setStartNewGame(true);
-              setGameInProgress(false);
+              setShowIntroHeader(true);
+              setShowGameInProgressHeader(false);
               setShowGameField(false);
             }}
           />

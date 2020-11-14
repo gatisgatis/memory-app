@@ -25,22 +25,40 @@
 .customInputsWrapper {
     position: absolute;
     left: 40px;
+    font-weight: 600;
+    
 }
 
 input {
     width: 50px;
+    padding: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid black;
 }
 
 .buttonOk {
     margin-left: 10px;
     padding: 3px;
+    background-color: lightblue;
+    border: 1px solid black;
+    transition: opacity 0.2s;
     cursor: pointer;
+    &:hover {
+        opacity: 0.7;
+    }
 }
 
 .button {
     border: none;
     background-color: lightblue;
-    padding: 10px;
+    padding: 10px 20px;
     font-weight: bold;
+    border: 1px solid black;
+    border-radius: 2px;
+    transition: opacity 0.2s;
     cursor: pointer;
+    &:hover {
+        opacity: 0.7;
+    }
 }
