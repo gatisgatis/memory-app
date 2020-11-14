@@ -1,28 +1,46 @@
 .window {
-    border: 1px solid black;
-    border-radius: 5px;
     width: 100%;
+    padding: 10px;
     padding-bottom: 30px;
+    height: 100%;
+    position: relative;
 }
 
 .title {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
+    padding: 3px;
+    margin-left: 20px;
+    margin-bottom: 20px;
 }
 
 .wrapper {
     display: flex;
-    width: 100%;
-    justify-content: space-around;
+    width: 50%;
+    justify-content: space-between;
+    margin-bottom: 5px;
 }
 
 .customInputsWrapper {
     position: absolute;
+    left: 40px;
+}
+
+input {
+    width: 50px;
+}
+
+.buttonOk {
+    margin-left: 10px;
+    padding: 3px;
+    cursor: pointer;
 }
 
 .button {
     border: none;
     background-color: lightblue;
     padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
 }

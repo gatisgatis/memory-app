@@ -6,6 +6,12 @@
 
 .header {
   width: 75%;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color:rgb(137, 190, 194);
+  overflow: hidden;
+  height: 150px;
+  margin: 5px 0;
 }
 
 .gameField {
@@ -17,6 +23,17 @@
   margin: 0;
 }
 
+.GameFieldBackGround {
+  width: 75%;
+  padding-top: 1000px;
+  background-image: url(https://selfreliantindia.com/wp-content/uploads/2020/07/Boost-your-memory-maintain-brain-health.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  opacity: 0.6;
+  border-radius: 5px;
+}
 
 .fieldColumn {
   display: flex;

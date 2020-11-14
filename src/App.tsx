@@ -6,6 +6,8 @@ import { Card } from './components/card/card';
 import { ChoseLevel } from './components/chose-level/chose-level';
 import { HighscoreTable } from './components/highscores/highscores';
 import { Counter } from './components/counter/counter';
+import { GameInProgress } from './components/game-in-progress/game-in-progress';
+import { BeforeGameInfo } from './components/before-game-info/before-game-info';
 
 let firstClickedIndex = 0;
 let secondClickedIndex = 0;
@@ -26,12 +28,13 @@ const MemoryApp = () => {
   const [clickedFirstCard, setClickedFirstCard] = useState<boolean | undefined>(
     true
   );
-  const [rowCount, setRowCount] = useState<number>(4);
-  const [columnCount, setColumnCount] = useState<number>(4);
-  const [helper, setHelper] = useState<boolean>(false);
+  const [rowCount, setRowCount] = useState<number>(2);
+  const [columnCount, setColumnCount] = useState<number>(2);
   const [choseLevel, setChoseLevel] = useState<boolean>(false);
   const [customLevel, setCustomLevel] = useState<boolean>(false);
   const [showGameField, setShowGameField] = useState<boolean>(false);
+  const [startNewGame, setStartNewGame] = useState<boolean>(true);
+  const [gameInProgress, setGameInProgress] = useState<boolean>(false);
 
   useEffect(() => {
     fieldSize = rowCount * columnCount; // Kopējais kartiņu daudzums
@@ -56,8 +59,8 @@ const MemoryApp = () => {
       tempHelperNumber -= 1;
       pairIDsArray.splice(tempPairIDindex, 1);
     }
-    setHelper(!helper);
-  }, [rowCount, columnCount]);
+    setClickedFirstCard(true);
+  }, [rowCount, columnCount, showGameField]);
 
   const fieldSizeChangeInputHandler = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -97,6 +100,9 @@ const MemoryApp = () => {
       setRowCount(count);
       setColumnCount(count);
       setCustomLevel(false);
+      setChoseLevel(false);
+      setShowGameField(false);
+      setStartNewGame(true);
     } else {
       setCustomLevel(true);
     }
@@ -112,34 +118,69 @@ const MemoryApp = () => {
         <HighscoreTable />
       </div>
       <div className="header">
-        <ChoseLevel
-          ClickOnThis={ChoseLevelHandler}
-          customWindow={customLevel}
-          changeCount={fieldSizeChangeInputHandler}
-          rowCount={rowCount}
-          colCount={columnCount}
-          cancelClick={() => setCustomLevel(false)}
-        />
+        {startNewGame && (
+          <BeforeGameInfo
+            rowCount={rowCount}
+            colCount={columnCount}
+            choseLevelClick={() => {
+              setChoseLevel(true);
+              setStartNewGame(false);
+            }}
+            startGameClick={() => {
+              setShowGameField(true);
+              setGameInProgress(true);
+              setStartNewGame(false);
+            }}
+          />
+        )}
+        {choseLevel && (
+          <ChoseLevel
+            ClickOnThis={ChoseLevelHandler}
+            customWindow={customLevel}
+            changeCount={fieldSizeChangeInputHandler}
+            rowCount={rowCount}
+            colCount={columnCount}
+            okCustomClick={() => {
+              setCustomLevel(false);
+              setChoseLevel(false);
+              setShowGameField(false);
+              setStartNewGame(true);
+            }}
+          />
+        )}
+        {gameInProgress && (
+          <GameInProgress
+            clickedSetUpGame={() => {
+              setStartNewGame(true);
+              setGameInProgress(false);
+              setShowGameField(false);
+            }}
+          />
+        )}
       </div>
-      <div className="row gameField">
-        {gameCards.map((card, index) => {
-          return (
-            <div
-              key={card.id}
-              className="fieldColumn"
-              style={{ flexBasis: flexBasisValue }}
-            >
-              <Card
-                isDisabled={card.imgSide}
-                clickOnCard={() => clickCardHandler(card, index)}
-                showImage={card.imgSide}
-                // @ts-ignore
-                imgID={card.pairID}
-              />
-            </div>
-          );
-        })}
-      </div>
+      {showGameField ? (
+        <div className="row gameField">
+          {gameCards.map((card, index) => {
+            return (
+              <div
+                key={card.id}
+                className="fieldColumn"
+                style={{ flexBasis: flexBasisValue }}
+              >
+                <Card
+                  isDisabled={card.imgSide}
+                  clickOnCard={() => clickCardHandler(card, index)}
+                  showImage={card.imgSide}
+                  // @ts-ignore
+                  imgID={card.pairID}
+                />
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="GameFieldBackGround" />
+      )}
     </div>
   );
 };

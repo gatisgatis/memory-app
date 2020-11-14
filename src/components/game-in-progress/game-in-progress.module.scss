@@ -1,0 +1,19 @@
+.wrapper {
+    width: 100%;
+    padding: 10px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.button {
+    padding: 10px;
+    background-color: gray;
+    border-radius: 3px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    &:hover{
+        opacity: 0.8;
+    }
+}

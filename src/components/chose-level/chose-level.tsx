@@ -7,7 +7,7 @@ type Props = {
   changeCount: (event: React.ChangeEvent<HTMLInputElement>) => void;
   rowCount: number;
   colCount: number;
-  cancelClick: () => void;
+  okCustomClick: () => void;
 };
 
 export const ChoseLevel: FC<Props> = ({
@@ -16,7 +16,7 @@ export const ChoseLevel: FC<Props> = ({
   changeCount,
   rowCount,
   colCount,
-  cancelClick,
+  okCustomClick,
 }) => {
   return (
     <div className={styles.window}>
@@ -60,7 +60,7 @@ export const ChoseLevel: FC<Props> = ({
           <span> Rindu skaits: </span>
           <input
             type="number"
-            className="input"
+            className={styles.input}
             value={rowCount}
             id="row"
             onChange={changeCount}
@@ -68,13 +68,17 @@ export const ChoseLevel: FC<Props> = ({
           <span> Kolonnu skaits: </span>
           <input
             type="number"
-            className="input"
+            className={styles.input}
             value={colCount}
             id="column"
             onChange={changeCount}
           />
-          <button type="button" onClick={cancelClick}>
-            Cancel
+          <button
+            className={styles.buttonOk}
+            type="button"
+            onClick={okCustomClick}
+          >
+            Ok
           </button>
         </div>
       )}
