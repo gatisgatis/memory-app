@@ -6,6 +6,7 @@ type Props = {
   moves: number;
   clickedSave: () => void;
   clickedReturn: () => void;
+  inputFieldRef: React.MutableRefObject<null>;
 };
 
 export const FinishGame: FC<Props> = ({
@@ -13,6 +14,7 @@ export const FinishGame: FC<Props> = ({
   moves,
   clickedReturn,
   clickedSave,
+  inputFieldRef,
 }) => {
   return (
     <div className={styles.wrapper}>
@@ -25,7 +27,13 @@ export const FinishGame: FC<Props> = ({
           <span className={styles.smallText}>
             Enter Your name and save result
           </span>
-          <input className={styles.input} type="text" name="" id="" />
+          <input
+            ref={inputFieldRef}
+            className={styles.input}
+            type="text"
+            name=""
+            id=""
+          />
           <button
             className={styles.saveButton}
             onClick={clickedSave}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { v4 as uuidv4 } from 'uuid';
 import { Card } from './components/card/card';
@@ -17,12 +17,20 @@ let gameCards: CardData[] = []; // masīvs ar visām kartiņam, kurš sākumā t
 let fieldSize: number = 1;
 let movesCount: number = 0;
 let gameTimeFinish: number = 0;
+let savedName = 'Unknown';
 
 type CardData = {
   id: string; // unikāls identifikators katrai kartītei. tiks izmantots priekš key, kad renderēs. varēja arī šeit nemaz nelikt...
   pairID: number | undefined; // šis katrām divām kartītēm būs vienāds. tiks izmantots, lai paŗbaudītu, vai noclickotās
   // kartītes ir vienādas un arī zīmējot html šis numurs nodrošinās to, ka tām ir vienādas bildes izmainot bildes source linku
   imgSide: boolean; // pēc šī app zinās, vai vajag šo kartīti atvērtu vai aizvērtu zīmēt
+};
+
+export type HighScore = {
+  name: string;
+  grid: string;
+  time: number;
+  moves: number;
 };
 
 const MemoryApp = () => {
@@ -38,6 +46,9 @@ const MemoryApp = () => {
   );
   const [counter, setCounter] = useState(0);
   const [showFinishGameWindow, setShowFinishGameWindow] = useState(false);
+  const [highScores, setHighScores] = useState<HighScore[]>([]);
+
+  const saveNameInputField = useRef(null);
 
   // Nodrošina taimera darbību. ne līdz galam skaidrs, kopēts risinājums...
   useEffect(() => {
@@ -133,6 +144,23 @@ const MemoryApp = () => {
     setShowIntroHeader(false);
   };
 
+  const saveDataFinishedGame = () => {
+    setShowIntroHeader(true);
+    setShowGameField(false);
+    setShowFinishGameWindow(false);
+    // @ts-ignore
+    savedName = saveNameInputField.current.value;
+    const updated = [
+      ...highScores,
+      {
+        name: savedName,
+        grid: `${rowCount}x${columnCount}`,
+        time: gameTimeFinish,
+        moves: movesCount,
+      },
+    ];
+    setHighScores(updated);
+  };
   // Izrēķina gridu laukumam
   const flexBasisValue = `${100 / columnCount}%`;
 
@@ -141,17 +169,14 @@ const MemoryApp = () => {
       {showFinishGameWindow && (
         <FinishGame
           time={gameTimeFinish}
-          moves={movesCount + 2}
+          moves={movesCount}
+          inputFieldRef={saveNameInputField}
           clickedReturn={() => {
             setShowIntroHeader(true);
             setShowGameField(false);
             setShowFinishGameWindow(false);
           }}
-          clickedSave={() => {
-            setShowIntroHeader(true);
-            setShowGameField(false);
-            setShowFinishGameWindow(false);
-          }}
+          clickedSave={saveDataFinishedGame}
         />
       )}
       <div className="sideBar">
@@ -160,7 +185,13 @@ const MemoryApp = () => {
           timeCounter={counter}
           showGameTime={showGameField}
         />
-        <HighscoreTable />
+        <HighscoreTable
+          Data={
+            highScores.length > 0
+              ? highScores
+              : [{ name: '---', grid: '---', time: 999, moves: 999 }]
+          }
+        />
       </div>
       <div className="header">
         {showIntroHeader && (

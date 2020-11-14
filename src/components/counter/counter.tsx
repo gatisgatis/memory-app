@@ -14,11 +14,16 @@ export const Counter: FC<Props> = ({
 }) => {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.text}>Total Moves: {moveCounter} </div>
       {showGameTime ? (
-        <div className={styles.text}>Game Time: {timeCounter} s</div>
+        <div>
+          <div className={styles.text}>Total Moves: {moveCounter} </div>
+          <div className={styles.text}>Game Time: {timeCounter} s</div>
+        </div>
       ) : (
-        <div className={styles.text}>Game Time: 0 s</div>
+        <div>
+          <div className={styles.text}>Total Moves: 0 </div>
+          <div className={styles.text}>Game Time: 0 s</div>
+        </div>
       )}
     </div>
   );
