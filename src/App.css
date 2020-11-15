@@ -42,6 +42,10 @@
   padding: 0.5%;
 }
 
+.solvedCard {
+  background-color: rgb(189, 164, 23);
+}
+
 .sideBar {
   width: 25%;
   position: absolute;

@@ -24,6 +24,7 @@ type CardData = {
   pairID: number | undefined; // šis katrām divām kartītēm būs vienāds. tiks izmantots, lai paŗbaudītu, vai noclickotās
   // kartītes ir vienādas un arī zīmējot html šis numurs nodrošinās to, ka tām ir vienādas bildes izmainot bildes source linku
   imgSide: boolean; // pēc šī app zinās, vai vajag šo kartīti atvērtu vai aizvērtu zīmēt
+  isSolved: boolean; // pēc šī zinās, vai kartītei jāuzliek rāmītis
 };
 
 export type HighScore = {
@@ -78,6 +79,7 @@ const MemoryApp = () => {
         id: uuidv4(),
         pairID: pairIDsArray[tempPairIDindex],
         imgSide: false,
+        isSolved: false,
       });
       tempHelperNumber -= 1;
       pairIDsArray.splice(tempPairIDindex, 1);
@@ -112,7 +114,12 @@ const MemoryApp = () => {
       secondClickedPairIdentificator = clickedCard.pairID;
       secondClickedIndex = index;
       setClickedFirstCard(true);
+      if (secondClickedPairIdentificator === firstClickedPairIdentificator) {
+        gameCards[secondClickedIndex].isSolved = true;
+        gameCards[firstClickedIndex].isSolved = true;
+      }
     }
+
     // Game Finish
     if (!gameCards.some((card) => !card.imgSide)) {
       gameTimeFinish = counter;
@@ -129,7 +136,6 @@ const MemoryApp = () => {
     // localStorage.setItem('LShighScores', JSON.stringify(highScores));
     // localStorage.setItem('LSmovesCount', JSON.stringify(movesCount));
     // localStorage.setItem('LShighScores', JSON.stringify(clickedFirstCard));
-
   };
 
   const ChoseLevelHandler = (event: React.MouseEvent<HTMLElement>) => {
@@ -206,13 +212,7 @@ const MemoryApp = () => {
           timeCounter={counter}
           showGameTime={showGameField}
         />
-        <HighscoreTable
-          Data={
-            highScores.length > 0
-              ? highScores
-              : []
-          }
-        />
+        <HighscoreTable Data={highScores.length > 0 ? highScores : []} />
       </div>
       <div className="header">
         {showIntroHeader && (
@@ -257,7 +257,7 @@ const MemoryApp = () => {
             return (
               <div
                 key={card.id}
-                className="fieldColumn"
+                className={`fieldColumn ${card.isSolved && 'solvedCard'}`}
                 style={{ flexBasis: flexBasisValue }}
               >
                 <Card
