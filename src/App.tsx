@@ -50,6 +50,8 @@ const MemoryApp = () => {
 
   const saveNameInputField = useRef(null);
 
+  localStorage.setItem('prevGameInfo', JSON.stringify(gameCards));
+
   // Nodrošina taimera darbību. ne līdz galam skaidrs, kopēts risinājums...
   useEffect(() => {
     const timer = setInterval(() => setCounter(counter + 1), 1000);
@@ -116,6 +118,18 @@ const MemoryApp = () => {
       gameTimeFinish = counter;
       setShowFinishGameWindow(true);
     }
+    // localStorage.setItem('LSgameCards', JSON.stringify(gameCards));
+    // localStorage.setItem('LSclickedFirstCard', JSON.stringify(clickedFirstCard));
+    // localStorage.setItem('LSshowChooseLevelWindow', JSON.stringify(showChooseLevelWindow));
+    // localStorage.setItem('LSshowCustomLevelInputs', JSON.stringify(showCustomLevelInputs));
+    // localStorage.setItem('LSshowGameField', JSON.stringify(showGameField));
+    // localStorage.setItem('LSshowIntroHeader', JSON.stringify(showIntroHeader));
+    // localStorage.setItem('LScounter', JSON.stringify(counter));
+    // localStorage.setItem('LSshowFinishGameWindow', JSON.stringify(showFinishGameWindow));
+    // localStorage.setItem('LShighScores', JSON.stringify(highScores));
+    // localStorage.setItem('LSmovesCount', JSON.stringify(movesCount));
+    // localStorage.setItem('LShighScores', JSON.stringify(clickedFirstCard));
+
   };
 
   const ChoseLevelHandler = (event: React.MouseEvent<HTMLElement>) => {
@@ -148,6 +162,7 @@ const MemoryApp = () => {
     setShowIntroHeader(true);
     setShowGameField(false);
     setShowFinishGameWindow(false);
+    setShowGameInProgressHeader(false);
     // @ts-ignore
     savedName = saveNameInputField.current.value;
     const updated = [
@@ -180,6 +195,7 @@ const MemoryApp = () => {
             setShowIntroHeader(true);
             setShowGameField(false);
             setShowFinishGameWindow(false);
+            setShowGameInProgressHeader(false);
           }}
           clickedSave={saveDataFinishedGame}
         />
@@ -194,7 +210,7 @@ const MemoryApp = () => {
           Data={
             highScores.length > 0
               ? highScores
-              : [{ name: '---', grid: '---', time: 999, moves: 999 }]
+              : []
           }
         />
       </div>
