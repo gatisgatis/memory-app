@@ -10,9 +10,9 @@ import { IntroHeader } from './components/intro-header/into-header';
 import { FinishGame } from './components/finish-game/finish-game';
 
 let firstClickedIndex = 0;
-let secondClickedIndex = 0;
-let firstClickedPairIdentificator: number | undefined = 0;
-let secondClickedPairIdentificator: number | undefined = 1;
+let secondClickedIndex = 1;
+let firstClickedPairIdentificator: number | undefined = 10000;
+let secondClickedPairIdentificator: number | undefined = 10001;
 let gameCards: CardData[] = []; // masīvs ar visām kartiņam, kurš sākumā tukšs
 let fieldSize: number = 1;
 let movesCount: number = 0;
@@ -129,18 +129,12 @@ const MemoryApp = () => {
     if (!gameCards.some((card) => !card.imgSide)) {
       gameTimeFinish = counter;
       setShowFinishGameWindow(true);
+      // Reseto visus būtiskos spēles mainīgos
+      firstClickedIndex = 0;
+      secondClickedIndex = 1;
+      firstClickedPairIdentificator = 10000;
+      secondClickedPairIdentificator = 10001;
     }
-    // localStorage.setItem('LSgameCards', JSON.stringify(gameCards));
-    // localStorage.setItem('LSclickedFirstCard', JSON.stringify(clickedFirstCard));
-    // localStorage.setItem('LSshowChooseLevelWindow', JSON.stringify(showChooseLevelWindow));
-    // localStorage.setItem('LSshowCustomLevelInputs', JSON.stringify(showCustomLevelInputs));
-    // localStorage.setItem('LSshowGameField', JSON.stringify(showGameField));
-    // localStorage.setItem('LSshowIntroHeader', JSON.stringify(showIntroHeader));
-    // localStorage.setItem('LScounter', JSON.stringify(counter));
-    // localStorage.setItem('LSshowFinishGameWindow', JSON.stringify(showFinishGameWindow));
-    // localStorage.setItem('LShighScores', JSON.stringify(highScores));
-    // localStorage.setItem('LSmovesCount', JSON.stringify(movesCount));
-    // localStorage.setItem('LShighScores', JSON.stringify(clickedFirstCard));
   };
 
   const ChoseLevelHandler = (event: React.MouseEvent<HTMLElement>) => {
