@@ -36,8 +36,8 @@ export type HighScore = {
 
 const MemoryApp = () => {
   const [clickedFirstCard, setClickedFirstCard] = useState(true);
-  const [rowCount, setRowCount] = useState(2);
-  const [columnCount, setColumnCount] = useState(2);
+  const [rowCount, setRowCount] = useState(4);
+  const [columnCount, setColumnCount] = useState(4);
   const [showChooseLevelWindow, setShowChooseLevelWindow] = useState(false);
   const [showCustomLevelInputs, setShowCustomLevelInputs] = useState(false);
   const [showGameField, setShowGameField] = useState(false);
@@ -47,7 +47,12 @@ const MemoryApp = () => {
   );
   const [counter, setCounter] = useState(0);
   const [showFinishGameWindow, setShowFinishGameWindow] = useState(false);
-  const [highScores, setHighScores] = useState<HighScore[]>([]);
+  let savedScores: HighScore[] | null = JSON.parse(
+    // @ts-ignore
+    localStorage.getItem('LShighScores')
+  );
+  if (savedScores === null) savedScores = [];
+  const [highScores, setHighScores] = useState<HighScore[]>(savedScores);
 
   const saveNameInputField = useRef(null);
 
@@ -184,7 +189,7 @@ const MemoryApp = () => {
       if (prev.time < next.time) return -1;
       return 1;
     });
-
+    localStorage.setItem('LShighScores', JSON.stringify(updated));
     setHighScores(updated);
   };
   // Izrēķina gridu laukumam
