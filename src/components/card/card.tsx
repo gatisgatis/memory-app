@@ -8,6 +8,8 @@ type Props = {
   imgID: number;
 };
 
+const randomer = Math.floor(Math.random()*5)+1;
+
 export const Card: FC<Props> = ({
   isDisabled,
   clickOnCard,
@@ -25,7 +27,7 @@ export const Card: FC<Props> = ({
         <>
           <img
             className={styles.img}
-            src={`https://picsum.photos/id/${imgID * 2 + 15}/300/150`}
+            src={`https://picsum.photos/id/${imgID * randomer  + 15 }/300/150`}
             alt={`Attēls Nr:  ${imgID}`}
           />
           <div className={styles.loader}> </div>

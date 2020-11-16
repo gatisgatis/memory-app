@@ -129,11 +129,6 @@ const MemoryApp = () => {
     if (!gameCards.some((card) => !card.imgSide)) {
       gameTimeFinish = counter;
       setShowFinishGameWindow(true);
-      // Reseto visus būtiskos spēles mainīgos
-      firstClickedIndex = 0;
-      secondClickedIndex = 1;
-      firstClickedPairIdentificator = 10000;
-      secondClickedPairIdentificator = 10001;
     }
   };
 
@@ -154,13 +149,18 @@ const MemoryApp = () => {
   };
 
   const startNewGame = () => {
-    setCounter(0);
     fieldSize = 1;
     movesCount = 0;
+    // Reseto visus būtiskos spēles mainīgos
+    firstClickedIndex = 0;
+    secondClickedIndex = 1;
+    firstClickedPairIdentificator = 10000;
+    secondClickedPairIdentificator = 10001;
     setClickedFirstCard(true);
     setShowGameField(true);
     setShowGameInProgressHeader(true);
     setShowIntroHeader(false);
+    setCounter(0);
   };
 
   const saveDataFinishedGame = () => {
@@ -188,6 +188,7 @@ const MemoryApp = () => {
   };
   // Izrēķina gridu laukumam
   const flexBasisValue = `${100 / columnCount}%`;
+
 
   return (
     <div className="main-app">
